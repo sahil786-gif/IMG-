@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Image Compressor</title>
+</head>
+<body>
+	<h1>Image Compressor</h1>
+	<input type="file" id="imageInput">
+	<button id="compressButton">Compress</button>
+	<a id="downloadLink" style="display: none;">Download Compressed Image</a>
+
+	<script>
+		document.getElementById("compressButton").onclick = function() {
+			const file = document.getElementById("imageInput").files[0];
+			const reader = new FileReader();
+
+			reader.onload = function(event) {
+				const image = new Image();
+				image.src = event.target.result;
+
+				image.onload = function() {
+					const canvas = document.createElement("canvas");
+					canvas.width = image.width;
+					canvas.height = image.height;
+					const context = canvas.getContext("2d");
+					context.drawImage(image, 0, 0);
+
+					const compressedImage = canvas.toDataURL("image/jpeg", 0.7); // Adjust compression quality here (0.0 - 1.0)
+
+					const downloadLink = document.getElementById("downloadLink");
+					downloadLink.href = compressedImage;
+					downloadLink.download = "compressed_image.jpg";
+					downloadLink.style.display = "block";
+				}
+			}
+
+			reader.readAsDataURL(file);
+		}
+	</script>
+</body>
+</html>
